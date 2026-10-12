@@ -1,0 +1,113 @@
+version: "1.0.0"
+interventions:
+  INFORM:
+    name: "Informative Cashflow Summary"
+    description: "Provide an informational projection of upcoming balances without urgency alert."
+    category: "advisory"
+    intervention_cost: 0.0
+    risk_reduction_factor: 0.05
+    unnecessary_cost: 0.1
+    mandatory_human_approval: false
+    reversible: true
+    requires_authorization: false
+    eligibility:
+      min_probability: 0.05
+      max_probability: 0.25
+    safety_constraints:
+      no_fund_movement: true
+
+  ALERT:
+    name: "Liquidity Shortfall Alert"
+    description: "Dispatch urgent warning to account owner regarding impending liquidity breach."
+    category: "notification"
+    intervention_cost: 0.1
+    risk_reduction_factor: 0.35
+    unnecessary_cost: 1.0
+    mandatory_human_approval: false
+    reversible: true
+    requires_authorization: false
+    eligibility:
+      min_probability: 0.25
+    safety_constraints:
+      cooldown_period_hours: 48
+      no_fund_movement: true
+
+  BUDGET_PROPOSAL:
+    name: "Discretionary Spending Reduction Proposal"
+    description: "Suggest voluntary reductions in non-essential entertainment or dining spending."
+    category: "budgeting"
+    intervention_cost: 0.5
+    risk_reduction_factor: 0.50
+    unnecessary_cost: 1.5
+    mandatory_human_approval: true
+    reversible: true
+    requires_authorization: true
+    eligibility:
+      min_probability: 0.30
+      min_discretionary_spend_ratio: 0.20
+    safety_constraints:
+      never_touch_essential_expenses: true
+      forbidden_categories:
+        - "rent"
+        - "mortgage"
+        - "utilities"
+        - "electricity"
+        - "water"
+        - "gas"
+        - "debt_repayment"
+        - "loan"
+        - "insurance"
+        - "healthcare"
+        - "medical"
+        - "payroll"
+        - "tax"
+
+  BILL_REVIEW:
+    name: "Upcoming Recurring Bill Review"
+    description: "Notify user of an impending scheduled bill and suggest requesting extension or deferral."
+    category: "cashflow_timing"
+    intervention_cost: 0.8
+    risk_reduction_factor: 0.60
+    unnecessary_cost: 2.0
+    mandatory_human_approval: true
+    reversible: true
+    requires_authorization: true
+    eligibility:
+      min_probability: 0.40
+      has_upcoming_bill_within_days: 7
+    safety_constraints:
+      never_automatically_cancel_bill: true
+      requires_explicit_user_confirmation: true
+
+  CASHFLOW_SCENARIO:
+    name: "Interactive Cashflow Scenario Simulation"
+    description: "Simulate sandbox outcome if discretionary purchases are paused or invoices expedited."
+    category: "simulation"
+    intervention_cost: 0.2
+    risk_reduction_factor: 0.40
+    unnecessary_cost: 0.5
+    mandatory_human_approval: false
+    reversible: true
+    requires_authorization: false
+    eligibility:
+      min_probability: 0.20
+    safety_constraints:
+      sandbox_only: true
+      no_real_transactions: true
+
+  HUMAN_REVIEW:
+    name: "Escalate to Human Financial Specialist"
+    description: "Escalate account with extreme deficit or severe model uncertainty to human financial review."
+    category: "escalation"
+    intervention_cost: 2.5
+    risk_reduction_factor: 0.85
+    unnecessary_cost: 4.0
+    mandatory_human_approval: true
+    reversible: false
+    requires_authorization: true
+    eligibility:
+      min_probability: 0.70
+      or_insufficient_history: true
+    safety_constraints:
+      strict_pii_redaction: true
+      sandbox_execution_only: true

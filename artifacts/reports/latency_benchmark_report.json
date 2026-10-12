@@ -1,0 +1,67 @@
+{
+  "timestamp": "2026-10-12T03:34:37.384937",
+  "sla_target_ms": 1500.0,
+  "all_within_sla": true,
+  "components": {
+    "csv_ingestion_and_validation": {
+      "runs": 15,
+      "mean_ms": 461.13,
+      "std_ms": 66.77,
+      "min_ms": 380.59,
+      "p50_ms": 455.58,
+      "p95_ms": 558.92,
+      "p99_ms": 611.59,
+      "max_ms": 624.76
+    },
+    "feature_engineering": {
+      "runs": 30,
+      "mean_ms": 0.56,
+      "std_ms": 0.31,
+      "min_ms": 0.39,
+      "p50_ms": 0.48,
+      "p95_ms": 0.85,
+      "p99_ms": 1.76,
+      "max_ms": 2.11
+    },
+    "deterministic_forecasting": {
+      "runs": 30,
+      "mean_ms": 0.25,
+      "std_ms": 0.09,
+      "min_ms": 0.17,
+      "p50_ms": 0.23,
+      "p95_ms": 0.42,
+      "p99_ms": 0.57,
+      "max_ms": 0.63
+    },
+    "probabilistic_forecasting": {
+      "runs": 20,
+      "mean_ms": 8.35,
+      "std_ms": 1.67,
+      "min_ms": 6.0,
+      "p50_ms": 8.3,
+      "p95_ms": 11.18,
+      "p99_ms": 12.46,
+      "max_ms": 12.78
+    },
+    "risk_inference_and_shap": {
+      "runs": 30,
+      "mean_ms": 19.08,
+      "std_ms": 6.31,
+      "min_ms": 13.01,
+      "p50_ms": 16.87,
+      "p95_ms": 31.23,
+      "p99_ms": 40.5,
+      "max_ms": 43.98
+    },
+    "end_to_end_agent_graph": {
+      "runs": 25,
+      "mean_ms": 17.63,
+      "std_ms": 1.65,
+      "min_ms": 14.58,
+      "p50_ms": 17.58,
+      "p95_ms": 20.57,
+      "p99_ms": 21.09,
+      "max_ms": 21.24
+    }
+  }
+}

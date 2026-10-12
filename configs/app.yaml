@@ -1,0 +1,36 @@
+app:
+  name: "FinSight AI"
+  version: "0.1.0"
+  description: "Cost-Sensitive, Explainable, Predictive Financial Intervention Agent"
+  environment: "development"
+  log_level: "INFO"
+  host: "0.0.0.0"
+  port: 8000
+  frontend_port: 8501
+
+database:
+  url: "sqlite:///./finsight.db"
+  echo: false
+
+regional:
+  default_currency: "BDT"
+  supported_currencies:
+    - "BDT"
+    - "USD"
+    - "EUR"
+    - "GBP"
+  bdt_min_safety_buffer: 500.0
+  usd_min_safety_buffer: 50.0
+  timezone: "Asia/Dhaka"
+
+security:
+  jwt_algorithm: "HS256"
+  jwt_expiration_minutes: 60
+  rate_limit_per_minute: 120
+  mask_pii: true
+
+agent:
+  mode: "deterministic"
+  llm_fallback_enabled: true
+  max_turn_steps: 8
+  timeout_seconds: 5.0

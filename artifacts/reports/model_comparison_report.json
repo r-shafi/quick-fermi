@@ -1,0 +1,73 @@
+{
+  "winner": "random_forest",
+  "models": {
+    "rule_based": {
+      "model_name": "rule_based",
+      "optimal_threshold": 0.01,
+      "test_expected_cost": 2.0,
+      "test_roc_auc": 0.9833,
+      "test_pr_auc": 0.8571,
+      "test_brier_score": 0.024,
+      "test_ece": 0.0066,
+      "confusion_matrix": {
+        "TP": 12,
+        "TN": 58,
+        "FP": 2,
+        "FN": 0
+      },
+      "recall_at_20pct_budget": 1.0,
+      "validation_cost": 3.0
+    },
+    "logistic_regression": {
+      "model_name": "logistic_regression",
+      "optimal_threshold": 0.01,
+      "test_expected_cost": 17.0,
+      "test_roc_auc": 1.0,
+      "test_pr_auc": 1.0,
+      "test_brier_score": 0.1154,
+      "test_ece": 0.156,
+      "confusion_matrix": {
+        "TP": 12,
+        "TN": 43,
+        "FP": 17,
+        "FN": 0
+      },
+      "recall_at_20pct_budget": 1.0,
+      "validation_cost": 5.0
+    },
+    "random_forest": {
+      "model_name": "random_forest",
+      "optimal_threshold": 0.01,
+      "test_expected_cost": 0.0,
+      "test_roc_auc": 1.0,
+      "test_pr_auc": 1.0,
+      "test_brier_score": 0.0,
+      "test_ece": 0.0001,
+      "confusion_matrix": {
+        "TP": 12,
+        "TN": 60,
+        "FP": 0,
+        "FN": 0
+      },
+      "recall_at_20pct_budget": 1.0,
+      "validation_cost": 1.0
+    },
+    "lightgbm": {
+      "model_name": "lightgbm",
+      "optimal_threshold": 0.01,
+      "test_expected_cost": 0.0,
+      "test_roc_auc": 1.0,
+      "test_pr_auc": 1.0,
+      "test_brier_score": 0.0007,
+      "test_ece": 0.0112,
+      "confusion_matrix": {
+        "TP": 12,
+        "TN": 60,
+        "FP": 0,
+        "FN": 0
+      },
+      "recall_at_20pct_budget": 1.0,
+      "validation_cost": 1.0
+    }
+  }
+}

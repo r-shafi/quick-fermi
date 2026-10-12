@@ -1,0 +1,74 @@
+model_config:
+  version: "1.0.0"
+  target:
+    name: "shortfall_within_7_days"
+    horizon_days: 7
+    safety_buffer_bdt: 500.0
+
+  features:
+    numerical:
+      - "verified_available_balance"
+      - "income_sum_7d"
+      - "income_sum_30d"
+      - "income_sum_90d"
+      - "income_freq_30d"
+      - "spend_sum_7d"
+      - "spend_sum_30d"
+      - "spend_sum_90d"
+      - "spend_freq_30d"
+      - "spending_acceleration_7_vs_30"
+      - "net_cashflow_7d"
+      - "net_cashflow_30d"
+      - "known_recurring_bills_next_7d"
+      - "known_recurring_bills_next_14d"
+      - "days_to_next_major_bill"
+      - "rolling_spend_volatility_30d"
+      - "essential_spend_ratio_30d"
+      - "discretionary_spend_ratio_30d"
+      - "uncertain_category_ratio"
+      - "days_of_solvency"
+      - "history_days"
+      - "data_staleness_days"
+      - "data_completeness_score"
+      - "day_of_week"
+      - "day_of_month"
+    binary:
+      - "is_cold_start"
+      - "has_overdraft_facility"
+      - "is_sme_account"
+
+  models:
+    rule_based:
+      description: "Deterministic liquidity runway baseline"
+      runway_days_threshold: 7.0
+
+    logistic_regression:
+      max_iter: 1000
+      class_weight: "balanced"
+      C: 0.1
+      random_state: 42
+
+    random_forest:
+      n_estimators: 100
+      max_depth: 6
+      min_samples_split: 10
+      class_weight: "balanced"
+      random_state: 42
+
+    lightgbm:
+      n_estimators: 100
+      learning_rate: 0.05
+      max_depth: 5
+      num_leaves: 31
+      is_unbalance: true
+      random_state: 42
+      verbose: -1
+
+  calibration:
+    method: "isotonic"  # 'isotonic' or 'sigmoid'
+    cv: "prefit"
+
+  temporal_split:
+    train_ratio: 0.60
+    val_ratio: 0.20
+    test_ratio: 0.20
