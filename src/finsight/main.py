@@ -12,11 +12,18 @@ from finsight.api.errors import (
 from finsight.api.routes import (
     accounts,
     approvals,
+    audit,
+    competition,
+    data_quality,
+    drift,
     evaluations,
     forecasts,
     health,
     recommendations,
     risk,
+    scenario,
+    security_tests,
+    settings as settings_route,
     transactions,
 )
 from finsight.database.session import init_db
@@ -63,6 +70,14 @@ app.include_router(risk.router)
 app.include_router(recommendations.router)
 app.include_router(approvals.router)
 app.include_router(evaluations.router)
+app.include_router(scenario.router)
+app.include_router(audit.router)
+app.include_router(security_tests.router)
+app.include_router(drift.router)
+app.include_router(data_quality.router)
+app.include_router(competition.router)
+app.include_router(settings_route.router)
+
 
 
 @app.get("/", tags=["Root"])

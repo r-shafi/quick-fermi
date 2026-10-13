@@ -105,3 +105,8 @@ class ModelDriftMonitor:
             "recommended_action": recommended_action,
             "auto_deployment_permitted": False,  # Safety guarantee
         }
+
+
+# Alias for backward compatibility with alternative naming
+DriftDetector = ModelDriftMonitor
+
