@@ -1,176 +1,174 @@
-# FinSight AI: Cost-Sensitive, Explainable, Predictive Financial Intervention Agent
+# FinSight AI: SME Finance Copilot
 
-[![Python 3.12](https://img.shields.io/badge/python-3.12-blue.svg)](https://www.python.org/downloads/)
+[![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.115+-009688.svg)](https://fastapi.tiangolo.com)
 [![Streamlit](https://img.shields.io/badge/Streamlit-1.42+-FF4B4B.svg)](https://streamlit.io)
-[![Tests: 65 Passed](https://img.shields.io/badge/tests-65%20passed-brightgreen.svg)](tests/)
-[![Coverage: 81%](https://img.shields.io/badge/coverage-81%25-green.svg)](tests/)
-[![Latency: 20ms p95](https://img.shields.io/badge/latency-20.57ms%20p95-blue.svg)](scripts/benchmark_latency.py)
+[![Tests: 72 Passed](https://img.shields.io/badge/tests-72%20passed-brightgreen.svg)](tests/)
+[![Latency: 7.34ms p95](https://img.shields.io/badge/latency-7.34ms%20p95-blue.svg)](artifacts/reports/latency_benchmark_report.json)
+[![Track: Topic E](https://img.shields.io/badge/FinTechathon%202026-Topic%20E%3A%20SME%20Finance%20Copilot-8b5cf6.svg)](docs/)
 
-FinSight AI is a cost-sensitive, explainable financial intervention system designed to assist personal and SME banking customers (with native multi-currency support prioritizing Bangladeshi Taka, **BDT**) in anticipating and mitigating short-term cash-flow shortfalls before they occur.
+FinSight AI is a cost-sensitive, explainable, predictive financial intervention copilot developed for the **2026 Shenzhen International FinTech Competition (FinTechathon), International Track, Topic E: SME Finance Copilot**.
 
-Rather than merely displaying historical charts or generating unconstrained conversational advice, FinSight AI optimizes financial decisions under **asymmetric error costs** ($C_{FN}=5.0, C_{FP}=1.0$), explains risks through **local SHAP attributions**, and enforces **deterministic safety guardrails** with mandatory human approval boundaries.
+The platform assists Small and Medium Enterprises (SMEs) and personal accounts in anticipating and mitigating short-term cash-flow shortfalls before they occur. Rather than providing ungrounded conversational advice, FinSight AI optimizes financial decisions under **asymmetric error costs** ($C_{FN}=5.0, C_{FP}=1.0$), explains risks through **local TreeSHAP attributions**, and enforces **deterministic safety guardrails** with mandatory human approval boundaries.
 
 ---
 
-## Key System Features
+## 17-Section Interactive Dashboard
 
-1. **Transaction Ingestion & Reconciliation Pipeline (`src/finsight/ingestion/`)**:
-   - Timezone-aware timestamp validation (`Asia/Dhaka`).
-   - Cryptographic transaction deduplication (ID and content hashing).
-   - Balance audit equation: $\text{Opening Balance} + \sum \text{Inflows} - \sum \text{Outflows} = \text{Closing Balance}$.
-   - Automatic flagging of internal self-transfers to prevent double-counting expenditure or income.
-2. **Point-in-Time Feature Engineering (`src/finsight/features/`)**:
-   - Pure causal feature extraction strictly prior to prediction timestamp $T$ (zero lookahead leakage).
-   - Spending velocity ratios, rolling volatility, recurring bill detection, days of solvency runway, and cold-start indicators.
-3. **Cash-Flow Forecasting (`src/finsight/forecasting/`)**:
-   - Dual-track projections across 1, 3, 7, and 14-day horizons.
-   - Deterministic bill roll-forward paired with 500-iteration probabilistic Monte Carlo quantiles ($P_{10}, P_{50}, P_{90}$).
-4. **Cost-Sensitive Supervised ML & Calibration (`src/finsight/ml_core/`)**:
-   - Random Forest, LightGBM, Logistic Regression, and Rule-Based Runway Baselines.
-   - Probability calibration fitted strictly on validation holdouts (Isotonic and Sigmoid).
-   - Optimal threshold selection $\tau^*$ minimizing empirical expected cost under $C_{FN}=5.0, C_{FP}=1.0$.
-5. **Local Explainability (`explainability.py`)**:
-   - SHAP TreeExplainer attributions decomposed into top risk drivers, risk mitigators, and human-readable causal limitation disclaimers.
-6. **Deterministic Decision Engine & Policy Guardrails (`src/finsight/decision/`)**:
-   - Expected financial cost minimization formula:
-     $$\mathbb{E}[\text{Cost}(a \mid p)] = (1 - p) C_{\text{unnecessary}, a} + p (1 - \alpha_a) C_{FN} + C_a$$
-   - **Hard Rule**: Essential recurring obligations (rent, mortgage, utilities, taxes, debt repayment, healthcare, payroll) can **NEVER** be paused, delayed, or cancelled.
-   - **Hard Rule**: Zero real money movements or credit underwriting. All prototype execution is sandboxed.
-7. **Human Approval Workflow (`src/finsight/execution/`)**:
-   - State machine: `PROPOSED -> PENDING_APPROVAL -> APPROVED / REJECTED -> EXECUTED_IN_SANDBOX`.
-   - Append-only audit logging recording actors, policy versions, and execution outcomes.
-8. **Interactive Full-Stack Architecture**:
-   - High-performance FastAPI backend with typed OpenAPI schemas.
-   - Beautiful 6-page Streamlit dashboard (Overview, Cashflow Forecast, Risk Explanations, Recommendations, Approvals, Model Evaluation).
+The Streamlit frontend connects directly to the FastAPI backend, model artifacts, SQLite database, and empirical testing outputs across 17 dedicated sections:
+
+| # | Section | Description |
+| :--- | :--- | :--- |
+| **01** | **Executive Overview** | Landing KPI matrix, 14-day cash-flow timeline with P10/P90 quantile fans, risk summary panel, and judge demonstration controls. |
+| **02** | **SME Financial Command Center** | Account summary (available vs ledger balance, burn rate), searchable transaction explorer, and mathematical reconciliation panel. |
+| **03** | **Cash-Flow Forecast** | Multi-horizon projections (1, 3, 7, 14 days), Monte Carlo vs deterministic roll-forward, and counterfactual assumption inspector. |
+| **04** | **Risk Intelligence** | Calibrated shortfall probability ($p$), cost-sensitive decision threshold ($\tau^*$), TreeSHAP waterfall charts, and evidence narratives. |
+| **05** | **AI Agent Workspace** | Interactive copilot dialogue with deterministic evidence-grounding engine, 11-node workflow trace, and decision inspector. |
+| **06** | **Scenario Simulator** | Stress-testing engine comparing 5 intervention strategies side-by-side with overlaid cash-flow trajectories. |
+| **07** | **Intervention & Approval Center** | Human-in-the-loop governance queue with cryptographic idempotency keys, state transitions, and sandbox execution. |
+| **08** | **Model Lab** | Benchmark comparison of 4 models (Rule-Based, Logistic Regression, Random Forest, LightGBM) with PR/ROC curves and calibration. |
+| **09** | **Financial Accuracy & Validation** | Evidence-grounded validation status across 7 categories, data provenance explorer, and empirical forecast/detection metrics. |
+| **10** | **Security & Compliance Center** | OWASP ASVS 4.0 L2, OWASP API Top 10, NIST AI RMF 1.0, RBAC permission matrix, and threat model explorer. |
+| **11** | **Adversarial Testing Lab** | 12 automated attack test cases (BOLA, prompt injection, essential bill cancellation) with live pytest test suite execution. |
+| **12** | **Data Quality & Dataset Explorer** | Schema validator, missing-value heatmap, transaction volume over time, and configurable synthetic data generator. |
+| **13** | **Model Drift & Monitoring** | Population Stability Index (PSI) and Kolmogorov-Smirnov (KS) drift tracking across features, scores, and missing-data rates. |
+| **14** | **Reinforcement Learning Research** | Experimental offline simulation benchmark comparing static heuristic, cost-sensitive, and contextual bandit policies. |
+| **15** | **Audit & Execution History** | Append-only audit ledger with SHA-256 hash chaining verification and timeline connecting assessments to execution. |
+| **16** | **Competition Evidence Center** | 8-dimension requirements matrix, submission evidence pack, empirical readiness summary, and **12-Step Guided Demo**. |
+| **17** | **System Settings** | Configuration manager for currency, safety buffers, risk policies, model versions, and role-based access. |
 
 ---
 
 ## Architecture Diagram
 
 ```mermaid
-graph TD
-    CSV[Bank Transactions CSV] --> INGEST[Ingestion & Reconciliation]
-    INGEST --> FEAT[Point-in-Time Features]
-    FEAT --> FORECAST[Deterministic & Probabilistic Forecasters]
-    FEAT --> ML[Shortfall Classifier & Calibrator]
-    ML --> SHAP[SHAP Tree Explainer]
-    ML --> COST[Cost-Sensitive Loss & Threshold tau*]
-    FORECAST --> POLICY[Deterministic Policy Engine]
-    COST --> POLICY
-    POLICY --> GUARD[Deterministic Safety Guardrails]
-    GUARD --> APPROV[Human Approval Queue]
-    APPROV --> SANDBOX[Sandbox Dispatcher & Audit Log]
-    SANDBOX --> DB[(SQLite / SQLAlchemy)]
-    API[FastAPI Backend] --> UI[Streamlit Frontend]
+flowchart TD
+    subgraph Data Layer
+        CSV["Bank / Ledger CSV"] --> INGEST["Schema Validation & Deduplication"]
+        INGEST --> DB[("SQLite Database<br/>(SQLAlchemy)")]
+    end
+
+    subgraph Feature & ML Core
+        DB --> FEAT["Point-in-Time Features<br/>(Zero Lookahead)"]
+        FEAT --> FORECAST["Deterministic & Monte Carlo<br/>Cash-Flow Forecasters"]
+        FEAT --> CLF["Shortfall Classifier<br/>(Random Forest / LightGBM)"]
+        CLF --> CALIB["Isotonic Calibrator"]
+        CLF --> SHAP["TreeSHAP Explainer"]
+        CALIB --> COST["Cost-Sensitive Optimization<br/>(C_FN=5.0, C_FP=1.0)"]
+    end
+
+    subgraph Agentic Governance
+        FORECAST --> POLICY["Deterministic Policy Engine"]
+        COST --> POLICY
+        SHAP --> POLICY
+        POLICY --> GUARD["Non-Negotiable Guardrails<br/>(Protected Essential Obligations)"]
+        GUARD --> QUEUE["Human Approval Queue<br/>(Dual-Key Authorization)"]
+        QUEUE --> SANDBOX["Sandbox Dispatcher<br/>(Zero Live Money Movement)"]
+        SANDBOX --> AUDIT["Immutable SHA-256<br/>Audit Ledger"]
+    end
+
+    subgraph User Experience
+        API["FastAPI Backend<br/>(:8000)"] <--> UI["Streamlit Dashboard<br/>(:8501)"]
+    end
+
+    DB <--> API
+    AUDIT --> DB
 ```
 
 ---
 
 ## Quickstart & Installation
 
-### 1. Local Environment
+### 1. Local Environment Setup
 ```bash
-# Clone and enter workspace
+# Clone repository
 git clone https://github.com/finsight-ai/finsight-ai.git
 cd finsight-ai
 
-# Create virtual environment (Python 3.12 recommended)
+# Create virtual environment and install dependencies
 python3 -m venv .venv
 source .venv/bin/activate
-
-# Install dependencies
-pip install -e .
+pip install -e .[dev]
+pip install streamlit plotly
 ```
 
-### 2. Generate Synthetic Dataset & Train Models
+### 2. Generate Synthetic Dataset & Seed Database
 ```bash
-# Generate 7 realistic account profiles (Stable Salary, Irregular, Spending Spike, Delayed Salary, SME, Cold Start, Edge Cases)
+# Generate 7 realistic SME and personal account profiles (seed 42)
 python scripts/generate_synthetic_data.py --seed 42
 
-# Validate dataset integrity & balance reconciliation
+# Validate dataset integrity & reconciliation
 python scripts/validate_dataset.py
 
-# Train and evaluate all 4 model variants using temporal splits
+# Seed SQLite database with all 7 accounts, demo approvals, and audit logs
+python scripts/seed_database.py
+
+# Train all candidate models and save winning package to artifacts/models/
 python scripts/train_models.py
 ```
 
-### 3. Run Latency Benchmark & End-to-End Demo
+### 3. Run Latency Benchmark & Automated Tests
 ```bash
-# Profile components against the 1.5s SLA target
+# Execute latency profiling against 1500ms SLA
 python scripts/benchmark_latency.py
 
-# Run single-command CLI demo walkthrough
-python scripts/run_demo.py --account ACC_003_SPIKE
+# Run complete test suite (72 passed)
+pytest tests/ -v
 ```
 
----
-
-## Running the Web Application
-
-### Option A: Local Execution
-Terminal 1 (Backend API):
+### 4. Launch Full Application
 ```bash
-source .venv/bin/activate
-uvicorn finsight.main:app --host 0.0.0.0 --port 8000 --reload
-```
-- FastAPI Docs: `http://localhost:8000/docs`
-- Health Endpoint: `http://localhost:8000/health`
+# Terminal 1: Launch FastAPI Backend
+uvicorn finsight.main:app --host 0.0.0.0 --port 8000
 
-Terminal 2 (Frontend Dashboard):
-```bash
-source .venv/bin/activate
+# Terminal 2: Launch Streamlit Frontend Dashboard
 streamlit run frontend/app.py --server.port 8501
 ```
-- Streamlit Interface: `http://localhost:8501`
-
-### Option B: Docker Compose
-```bash
-docker compose up --build
-```
+- Frontend Dashboard: `http://localhost:8501`
+- FastAPI Documentation: `http://localhost:8000/docs`
+- Service Health Endpoint: `http://localhost:8000/health`
 
 ---
 
-## Validation & Test Suite
+## 12-Step Guided Competition Demonstration
 
-The test suite contains **65 automated tests** covering unit logic, integration endpoints, security guardrails, and temporal splitting:
+Judges and evaluators can launch the **12-Step Guided Demo** directly from the sidebar or from **Page 16 (Competition Evidence Center)**:
 
-```bash
-# Run complete test suite
-pytest tests/ -v
-
-# Run with statement coverage report
-pytest tests/ --cov=finsight --cov-report=term-missing
-```
-
-### Test Suite Summary:
-- **Unit Tests (17 tests)**: Point-in-time features, zero-division safety, cold-start flags, cash-flow roll-forward, probabilistic quantiles, forecast metrics, cost-sensitive matrices, calibration bounds, policy engine ranking.
-- **Integration Tests (10 tests)**: CSV upload, schema rejection, duplicate handling, internal transfer reconciliation, account summaries, forecasts, risk assessment, SHAP explanations, recommendation generation, approval lifecycle, idempotency.
-- **Security Tests (36 tests)**: Multi-tenant account isolation, rate-limiting token bucket, protection of all 12 essential categories against cancellation and pause, rejection of live money movement, prompt injection sanitization, deterministic policy immunity.
-- **Evaluation Tests (2 tests)**: Mathematical zero lookahead leakage, strict chronological time ordering ($\max(t_{\text{train}}) < \min(t_{\text{val}}) < \min(t_{\text{test}})$).
-- **Result:** **65 passed, 0 failed, 81% overall coverage**.
+1. **Load Synthetic SME Account:** Select verified corporate profile `ACC_005_SME`.
+2. **Inspect Transaction Ledger:** View categorized revenues, supplier bills, and scheduled overheads.
+3. **Validate Financial Balances:** Confirm mathematical reconciliation ($Opening + Inflows - Outflows = Closing$).
+4. **Run Multi-Horizon Forecast:** Execute 500-path Monte Carlo simulation for 1, 3, 7, and 14-day horizons.
+5. **Explain Shortfall Risk:** Inspect cost-sensitive probability ($p=68\%$) and local TreeSHAP attribution waterfall.
+6. **Compare What-If Interventions:** Simulate receipt delays and evaluate 5 mitigation strategies.
+7. **Select Permitted Action:** Policy engine proposes `ACT_REC_01` (Accelerated Invoice Discounting).
+8. **Enforce Human Approval:** Confirm proposal is safely locked awaiting operator sign-off.
+9. **Execute in Sandbox:** Authorize proposal and verify dispatch to `SandboxDispatcher`.
+10. **Inspect Immutable Audit Trail:** Verify cryptographic SHA-256 block chaining.
+11. **Review Evaluation Evidence:** Inspect untouched holdout PR-AUC, cost curves, and latency metrics.
+12. **Demonstrate Blocked Malicious Action:** Verify BOLA attack and essential-bill cancellation rejection.
 
 ---
 
-## Measured Component Latency
+## Measured Component Latency Profile
 
-Benchmarked across 25 runs on standard hardware (`scripts/benchmark_latency.py`):
+Benchmarked via `scripts/benchmark_latency.py` across 25 iterations on standard hardware:
 
 | Component | p50 Latency | p95 Latency | p99 Latency | SLA Status (< 1500ms) |
 | :--- | :--- | :--- | :--- | :--- |
-| **CSV Ingestion & Validation** | 455.58 ms | 558.92 ms | 611.59 ms | **PASSED** |
-| **Point-in-Time Feature Extraction** | 0.48 ms | 0.85 ms | 1.76 ms | **PASSED** |
-| **Deterministic Forecasting** | 0.23 ms | 0.42 ms | 0.57 ms | **PASSED** |
-| **Probabilistic Forecaster (100 paths)**| 8.30 ms | 11.18 ms | 12.46 ms | **PASSED** |
-| **Risk Inference & Tree SHAP** | 16.87 ms | 31.23 ms | 40.50 ms | **PASSED** |
-| **End-to-End Agent Graph Pipeline** | **17.58 ms** | **20.57 ms** | **21.09 ms** | **PASSED** (1479ms headroom) |
+| **CSV Ingestion & Validation** | 297.18 ms | 309.12 ms | 313.24 ms | **PASSED** |
+| **Point-in-Time Feature Engineering** | 0.42 ms | 0.45 ms | 0.48 ms | **PASSED** |
+| **Deterministic Forecasting** | 0.18 ms | 0.22 ms | 0.22 ms | **PASSED** |
+| **Probabilistic Forecaster (100 paths)** | 6.77 ms | 6.92 ms | 6.99 ms | **PASSED** |
+| **Risk Inference & TreeSHAP** | 6.09 ms | 6.25 ms | 6.36 ms | **PASSED** |
+| **End-to-End Pipeline Execution** | **7.07 ms** | **7.34 ms** | **7.46 ms** | **PASSED** (1492.7ms headroom) |
 
 ---
 
-## Limitations & Disclaimers
+## Mandatory Ethical Disclosures & Limitations
 
 > [!IMPORTANT]
-> 1. **Synthetic Data Provenance**: All evaluation metrics reported in this repository are computed on synthetic simulated data generated by `scripts/generate_synthetic_data.py`. No real customer bank data was used.
-> 2. **Zero External Validation**: This system has **NOT** been piloted or validated on real banking customers or live production accounts.
-> 3. **Observational vs. Causal**: SHAP values explain model associations, not causal real-world economics.
-> 4. **No Financial Movement**: The prototype operates strictly in sandbox simulation mode. It does not move funds, grant credit, or cancel legal obligations.
+> 1. **Real-World Validation Disclosure:** **Real-world SME predictive accuracy has not yet been established.** No authorized external SME dataset with observed shortfall outcomes has been evaluated. All metrics reported in this repository are strictly computed on synthetic benchmark datasets generated with known ground-truth events.
+> 2. **Reinforcement Learning Notice:** **RL research is optional and is not part of the active decision policy.** RL policy exploration is strictly confined to offline simulation and cannot execute financial actions.
+> 3. **Observational vs. Causal:** TreeSHAP attributions explain statistical associations in the trained model, not causal macroeconomic guarantees.
+> 4. **Zero Autonomous Money Movement:** The platform operates strictly in sandbox execution mode (`SandboxDispatcher`). It does not move live funds, issue real credit, or modify legal contracts.
+> 5. **Essential Obligations Immunity:** Payroll, commercial rent, utilities, tax withholdings, and debt repayments are hard-locked by deterministic guardrails and cannot be cancelled or deferred.

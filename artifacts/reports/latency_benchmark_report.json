@@ -1,67 +1,67 @@
 {
-  "timestamp": "2026-10-12T03:34:37.384937",
+  "timestamp": "2026-10-14T12:12:33.747373",
   "sla_target_ms": 1500.0,
   "all_within_sla": true,
   "components": {
     "csv_ingestion_and_validation": {
       "runs": 15,
-      "mean_ms": 461.13,
-      "std_ms": 66.77,
-      "min_ms": 380.59,
-      "p50_ms": 455.58,
-      "p95_ms": 558.92,
-      "p99_ms": 611.59,
-      "max_ms": 624.76
+      "mean_ms": 299.08,
+      "std_ms": 6.24,
+      "min_ms": 291.63,
+      "p50_ms": 297.18,
+      "p95_ms": 309.12,
+      "p99_ms": 313.24,
+      "max_ms": 314.28
     },
     "feature_engineering": {
       "runs": 30,
-      "mean_ms": 0.56,
-      "std_ms": 0.31,
-      "min_ms": 0.39,
-      "p50_ms": 0.48,
-      "p95_ms": 0.85,
-      "p99_ms": 1.76,
-      "max_ms": 2.11
+      "mean_ms": 0.43,
+      "std_ms": 0.02,
+      "min_ms": 0.41,
+      "p50_ms": 0.42,
+      "p95_ms": 0.45,
+      "p99_ms": 0.48,
+      "max_ms": 0.5
     },
     "deterministic_forecasting": {
       "runs": 30,
-      "mean_ms": 0.25,
-      "std_ms": 0.09,
-      "min_ms": 0.17,
-      "p50_ms": 0.23,
-      "p95_ms": 0.42,
-      "p99_ms": 0.57,
-      "max_ms": 0.63
+      "mean_ms": 0.19,
+      "std_ms": 0.01,
+      "min_ms": 0.18,
+      "p50_ms": 0.18,
+      "p95_ms": 0.22,
+      "p99_ms": 0.22,
+      "max_ms": 0.23
     },
     "probabilistic_forecasting": {
       "runs": 20,
-      "mean_ms": 8.35,
-      "std_ms": 1.67,
-      "min_ms": 6.0,
-      "p50_ms": 8.3,
-      "p95_ms": 11.18,
-      "p99_ms": 12.46,
-      "max_ms": 12.78
+      "mean_ms": 6.78,
+      "std_ms": 0.07,
+      "min_ms": 6.71,
+      "p50_ms": 6.77,
+      "p95_ms": 6.92,
+      "p99_ms": 6.99,
+      "max_ms": 7.01
     },
     "risk_inference_and_shap": {
       "runs": 30,
-      "mean_ms": 19.08,
-      "std_ms": 6.31,
-      "min_ms": 13.01,
-      "p50_ms": 16.87,
-      "p95_ms": 31.23,
-      "p99_ms": 40.5,
-      "max_ms": 43.98
+      "mean_ms": 6.11,
+      "std_ms": 0.08,
+      "min_ms": 5.99,
+      "p50_ms": 6.09,
+      "p95_ms": 6.25,
+      "p99_ms": 6.36,
+      "max_ms": 6.39
     },
     "end_to_end_agent_graph": {
       "runs": 25,
-      "mean_ms": 17.63,
-      "std_ms": 1.65,
-      "min_ms": 14.58,
-      "p50_ms": 17.58,
-      "p95_ms": 20.57,
-      "p99_ms": 21.09,
-      "max_ms": 21.24
+      "mean_ms": 7.11,
+      "std_ms": 0.11,
+      "min_ms": 6.95,
+      "p50_ms": 7.07,
+      "p95_ms": 7.34,
+      "p99_ms": 7.46,
+      "max_ms": 7.48
     }
   }
 }
