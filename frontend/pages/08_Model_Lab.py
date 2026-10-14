@@ -259,7 +259,7 @@ with cm_col1:
             </div>
             <table style="width:100%; border-collapse:collapse; text-align:center; font-family:'JetBrains Mono', monospace; font-size:0.85rem;">
                 <tr>
-                    <td style="padding:8px; border:1px solid #1e3a6e; background:#0f172a; color:#94a3b8;"><b>Predicted \ Actual</b></td>
+                    <td style="padding:8px; border:1px solid #1e3a6e; background:#0f172a; color:#94a3b8;"><b>Predicted / Actual</b></td>
                     <td style="padding:8px; border:1px solid #1e3a6e; background:#0f172a; color:#ef4444;"><b>Actual Shortfall (1)</b></td>
                     <td style="padding:8px; border:1px solid #1e3a6e; background:#0f172a; color:#10b981;"><b>Actual Solvency (0)</b></td>
                 </tr>
