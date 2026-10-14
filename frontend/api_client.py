@@ -42,6 +42,9 @@ class FinsightAPIClient:
     def check_health(self) -> Dict[str, Any]:
         return self._get("/health")
 
+    def get_health(self) -> Dict[str, Any]:
+        return self.check_health()
+
     # ── Accounts ───────────────────────────────────────────────────────────────
     def list_accounts(self) -> List[Dict[str, Any]]:
         return self._get("/api/v1/accounts")

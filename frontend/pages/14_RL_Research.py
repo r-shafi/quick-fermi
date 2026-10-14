@@ -31,6 +31,7 @@ sandbox_notice()
 
 st.warning(
     "⚠️ **Experimental Research Sandbox Notice:** "
+    "**RL research is optional and is not part of the active decision policy.** "
     "This module demonstrates offline Reinforcement Learning (RL) simulation for dynamic cashflow policy optimization. "
     "RL agents are strictly confined to offline simulation and are **NEVER deployed for autonomous production execution**.",
     icon="🔬",

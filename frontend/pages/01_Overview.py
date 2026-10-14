@@ -13,14 +13,6 @@ from datetime import datetime, timedelta
 
 inject_css()
 
-# Clean up obsolete deprecated files if present
-for old_name in ["02_Cashflow_Forecast.py", "03_Risk_Explanations.py", "04_Recommendations.py", "05_Approvals.py", "06_Model_Evaluation.py"]:
-    old_p = os.path.join(os.path.dirname(__file__), old_name)
-    if os.path.exists(old_p):
-        try:
-            os.remove(old_p)
-        except Exception:
-            pass
 
 client: FinsightAPIClient = st.session_state.get("api_client", FinsightAPIClient())
 account_id: str = st.session_state.get("selected_account_id", "ACC_001_STABLE")
@@ -349,38 +341,75 @@ with r2:
 st.markdown("<hr/>", unsafe_allow_html=True)
 section_header("Interactive Judge Controls", badge="SANDBOX")
 
-col_btn1, col_btn2, col_btn3 = st.columns(3)
-with col_btn1:
-    if st.button("⚡ Run Financial Assessment", use_container_width=True):
-        with st.spinner("Executing agentic graph pipeline across transactions..."):
-            try:
-                res = client.run_risk_assessment(account_id)
-                st.success(f"Assessment complete: Probability={res.get('calibrated_probability', 0.12):.1%}, Shortfall={res.get('is_shortfall_predicted')}")
-            except Exception as e:
-                st.warning(f"Assessment simulated (backend reconnecting: {e})")
+col_scenario, col_actions = st.columns([1, 1.2])
+
+with col_scenario:
+    st.markdown("<b style='font-size:0.85rem; color:#e2e8f0;'>1. Load Versioned Synthetic SME Scenario:</b>", unsafe_allow_html=True)
+    all_profiles = [
+        ("ACC_001_STABLE", "ACC_001_STABLE — Stable Personal Salary (Low Risk)"),
+        ("ACC_002_IRREGULAR", "ACC_002_IRREGULAR — Irregular Freelance Inflows"),
+        ("ACC_003_SPIKE", "ACC_003_SPIKE — Discretionary Spending Spike"),
+        ("ACC_004_DELAYED", "ACC_004_DELAYED — Delayed Receivables Squeeze"),
+        ("ACC_005_SME", "ACC_005_SME — Commercial SME Enterprise (High Liquidity)"),
+        ("ACC_006_COLD_START", "ACC_006_COLD_START — Cold Start Account (<14d History)"),
+        ("ACC_007_EDGE_CASES", "ACC_007_EDGE_CASES — Edge Cases & Negative Balance"),
+    ]
+    profile_keys = [p[0] for p in all_profiles]
+    profile_labels = {p[0]: p[1] for p in all_profiles}
+    
+    current_idx = profile_keys.index(account_id) if account_id in profile_keys else 0
+    selected_profile = st.selectbox(
+        "Select SME Scenario Profile",
+        profile_keys,
+        format_func=lambda k: profile_labels.get(k, k),
+        index=current_idx,
+        key="judge_scenario_select"
+    )
+    if st.button("📥 Load Versioned Scenario", use_container_width=True):
+        st.session_state.selected_account_id = selected_profile
+        st.success(f"Loaded scenario {selected_profile}")
         st.rerun()
 
-with col_btn2:
-    if st.button("🔄 Refresh Latest Forecast", use_container_width=True):
-        st.toast("Refreshed multi-horizon Monte Carlo cash-flow simulations.")
-        st.rerun()
+with col_actions:
+    st.markdown("<b style='font-size:0.85rem; color:#e2e8f0;'>2. Execution & Guided Demonstration:</b>", unsafe_allow_html=True)
+    b_col1, b_col2 = st.columns(2)
+    with b_col1:
+        if st.button("⚡ Run Full Assessment", use_container_width=True):
+            with st.spinner("Executing agentic graph pipeline across transactions..."):
+                try:
+                    res = client.run_risk_assessment(account_id)
+                    st.session_state.last_assessment = res
+                    st.success(f"Assessment complete: Probability={res.get('calibrated_probability', 0.12):.1%}, Shortfall={res.get('is_shortfall_predicted')}")
+                except Exception as e:
+                    st.warning(f"Assessment simulated (backend reconnecting: {e})")
+            st.rerun()
+    with b_col2:
+        if st.button("🎬 Launch Guided Demo", use_container_width=True):
+            st.session_state.demo_mode = True
+            st.session_state.demo_step = 1
+            st.switch_page("pages/16_Competition_Evidence.py")
 
-with col_btn3:
-    show_evidence = st.button("🏆 Competition Evidence Dossier", use_container_width=True)
+    with st.expander("📤 Upload Bank / Ledger CSV"):
+        uploaded = st.file_uploader("Upload CSV", type=["csv"], key="overview_csv_upload")
+        if uploaded is not None:
+            if st.button("Process & Validate CSV", use_container_width=True, key="btn_upload_csv_overview"):
+                with st.spinner("Ingesting and validating..."):
+                    try:
+                        rep = client.upload_csv(
+                            file_bytes=uploaded.getvalue(),
+                            filename=uploaded.name,
+                            currency="BDT",
+                            account_type="SME" if "SME" in account_id else "PERSONAL"
+                        )
+                        st.success(f"✅ Ingested {rep.get('valid_records', 0)} valid records")
+                        st.rerun()
+                    except Exception as err:
+                        st.error(f"Upload failed: {err}")
 
-if show_evidence:
-    with st.expander("Shenzhen FinTechathon Topic E Evidence Summary", expanded=True):
-        st.markdown(
-            """
-            **Project:** FinSight AI — Cost-Sensitive, Explainable, Predictive Financial Intervention Agent  
-            **Track:** International Track · Topic E: SME Finance Copilot  
-            **Core Innovation:**  
-            1. **Cost-Sensitive Loss:** Formulates asymmetric error economics ($C_{FN}=5.0$ vs $C_{FP}=1.0$), ensuring zero missed insolvencies.  
-            2. **Verified Explainability:** Real TreeSHAP attribution grounded in immutable database records.  
-            3. **Autonomous Guardrails:** Essential obligations (payroll, rent, debt) are strictly non-cancellable.  
-            4. **Sub-25ms Execution:** Full end-to-end pipeline executes in ~20.5ms on commodity hardware.
-            """
-        )
+# Inspection of most recent assessment
+if "last_assessment" in st.session_state and st.session_state.last_assessment:
+    with st.expander("🔍 Most Recent Financial Assessment Telemetry", expanded=False):
+        st.json(st.session_state.last_assessment)
 
 evidence_panel(
     source="Core Ingestion & Decision Repository",

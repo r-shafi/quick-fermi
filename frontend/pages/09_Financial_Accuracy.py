@@ -88,6 +88,12 @@ val_cards = [
         "tested": "Live customer bank account cohort integration pending regulatory approval and open banking mTLS pilot.",
         "evidence": "docs/limitations.md (Sec 4: Pilot Readiness Requirements)",
     },
+    {
+        "title": "Financial Cost Evaluation",
+        "status": "VERIFIED",
+        "tested": "Cost matrix optimization (C_FN=5.0, C_FP=1.0) evaluated against holdout test set with threshold-cost curve.",
+        "evidence": "src/finsight/ml_core/cost_sensitive_loss.py & artifacts/reports/model_comparison_report.json",
+    },
 ]
 
 c1, c2, c3 = st.columns(3)
