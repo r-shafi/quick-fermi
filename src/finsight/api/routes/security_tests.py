@@ -145,8 +145,11 @@ def run_security_test_suite(
     t_start = time.perf_counter()
 
     try:
+        import sys
+        venv_pytest = PROJECT_ROOT / ".venv" / "bin" / "pytest"
+        pytest_cmd = [str(venv_pytest)] if venv_pytest.exists() else [sys.executable, "-m", "pytest"]
         proc = subprocess.run(
-            [".venv/bin/pytest", "tests/security/", "-v", "--tb=short", "--no-header"],
+            pytest_cmd + ["tests/security/", "-v", "--tb=short", "--no-header"],
             capture_output=True,
             text=True,
             cwd=str(PROJECT_ROOT),
