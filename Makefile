@@ -15,6 +15,7 @@ install:
 data:
 	$(PYTHON) scripts/generate_synthetic_data.py --seed 42
 	$(PYTHON) scripts/validate_dataset.py
+	$(PYTHON) scripts/seed_database.py
 
 train:
 	$(PYTHON) scripts/train_models.py
