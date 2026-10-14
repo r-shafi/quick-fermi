@@ -34,7 +34,7 @@ section_header("Service Health & Operational Telemetry", badge="ONLINE")
 # Query API health or build verified fallback
 try:
     health_data = client.get_health()
-    api_online = health_data.get("status", "ok") == "ok"
+    api_online = health_data.get("status", "").lower() in ["ok", "healthy"]
     api_version = health_data.get("version", "1.0.0")
 except Exception:
     api_online = True
